@@ -21,9 +21,12 @@
 #' @export indActogramWake
 #'
 #' @examples
+#' \dontrun{
 #' td <- trimData(data = df, start.date = "19 Dec 20", start.time = "21:00",
 #' n.days = 10, bin = 1, t.cycle = 24)
 #' ind.actogram.wake <- indActogramWake(data = td, ind = 7)
+#' }
+
 
 indActogramWake <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1, key.wake = 1) {
   
@@ -132,7 +135,7 @@ indActogramWake <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind 
       p,
       nrows = length(a[1,]),
       shareX = T,
-      margin = 0.0
+      margin = 0.0, widths = NULL, heights = NULL
     )%>%
       layout(
         showlegend = F,
