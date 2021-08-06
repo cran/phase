@@ -36,6 +36,7 @@ If average.type = "Days":
 }
 }
 \item{Plot}{A \code{plotly} \code{htmlwidget} with the sleep profiles in a 4-by-8 array.}
+
 If average.type = "Flies":
 \item{Profiles}{
 \describe{
@@ -45,6 +46,7 @@ If average.type = "Flies":
 }
 }
 \item{Plot}{A \code{plotly} \code{htmlwidget} with the sleep time-series.}
+
 If average.type = "Both":
 \item{Profiles}{
 \describe{

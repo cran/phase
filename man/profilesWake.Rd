@@ -35,7 +35,8 @@ If average.type = "Days":
 \item{I1:I32}{SEM (across days) for each of 32 flies.}
 }
 }
-\item{Plot}{A \code{plotly} \code{htmlwidget} with the wakefulness profiles in a 4-by-8 array.}
+\item{Plot}{A \code{plotly} \code{htmlwidget} with the wake profiles in a 4-by-8 array.}
+
 If average.type = "Flies":
 \item{Profiles}{
 \describe{
@@ -44,7 +45,8 @@ If average.type = "Flies":
 \item{SEM}{SEM (across flies).}
 }
 }
-\item{Plot}{A \code{plotly} \code{htmlwidget} with the wakefulness time-series.}
+\item{Plot}{A \code{plotly} \code{htmlwidget} with the wake time-series.}
+
 If average.type = "Both":
 \item{Profiles}{
 \describe{
@@ -53,7 +55,7 @@ If average.type = "Both":
 \item{SEM}{SEM (across flies).}
 }
 }
-\item{Plot}{A \code{plotly} \code{htmlwidget} with the wakefulness profile.}
+\item{Plot}{A \code{plotly} \code{htmlwidget} with the wake profile.}
 }
 }
 \description{
