@@ -1,7 +1,7 @@
-13af9e2de64d82b3f6f94f3baf79a0c3 *DESCRIPTION
+e094f98d2764df438bb42cb16bc5c385 *DESCRIPTION
 8863553827c5238f83b7654f703ae519 *LICENSE
-d0112e549b968d1a44297ed57442a267 *NAMESPACE
-34d0a997807e17e58d58ac35790d4ef2 *R/CoM.R
+3be0cb7d62f439aeb612ec111510cc0b *NAMESPACE
+0bc822a2a2e689f0752eba2320edf8de *R/CoM.R
 2ceb36a562b28bea90e5a6d83039b62e *R/allActograms.R
 725443c52ea74d4d4f9bae6ea7bc8033 *R/allActogramsWake.R
 a993390603b5181be1d0eab4554427a1 *R/allPeriodogramsAct.R
@@ -9,7 +9,7 @@ f3f68a5dc12407895434002e1e86f039 *R/allPeriodogramsSleep.R
 5b846414eed787213f119fc50e68d5dc *R/allPeriodogramsWake.R
 392f54b21f658d3106ab192a39a30805 *R/allSomnograms.R
 784e47cf8cee31a23448c0f40f37efcc *R/anticipationAct.R
-a1bd57769855068589c6146425a6722e *R/binData.R
+b6b3c4d88bd8539213f596b25512c7fe *R/binData.R
 59db3ca76e53bf8135c138f8b1f30801 *R/df.R
 38e54e4b35f83f1ebfe3b8e8f9336c28 *R/indActogram.R
 0a22ddd58a05934ac3ee905fefb831bb *R/indActogramWake.R
@@ -24,10 +24,11 @@ eb8857337047a461782f2699d3780a28 *R/profilesWake.R
 1fadcccc1056cdae469601f9517e1c6a *R/rosePlotsAct.R
 8cdd2a45dfdfcf6d372e8fadbb438623 *R/rosePlotsSleep.R
 8b408905dea28f6389f895a22a7c2bd3 *R/rosePlotsWake.R
-ee41017b73b517f83a9af8c073a33b22 *R/sleepData.R
-72c3a35bb43cb1c0a41f0a18932f544e *R/sleepStat.R
+88868489333322a7de2c578eaec5f3bd *R/sleepData.R
+552900571a3220178499f3a96d74f9d0 *R/sleepOnsetBoutLength.R
+9bedac05555ffc1213866417f47fc03b *R/sleepStat.R
 3266fc981b94e59508aef075fb570532 *R/trimData.R
-50fc537d444157a1894855040e662a37 *R/wakeData.R
+29a83baffc1bf5b6b2310667663d9463 *R/wakeData.R
 8c4f93a4fc662655c57b9f33da8afa03 *data/df.rda
 868bd0be35c977a8976b9598f3b702b4 *man/CoM.Rd
 64645d6a90a21457a60c3a6d56577066 *man/allActograms.Rd
@@ -37,7 +38,7 @@ ee41017b73b517f83a9af8c073a33b22 *R/sleepData.R
 4b27dfa7b955655c248780396074d9d1 *man/allPeriodogramsWake.Rd
 d0714d6044da46c01aad9f6cf39e5c0d *man/allSomnograms.Rd
 a2b452b354dea57a732c360a231f0263 *man/anticipationAct.Rd
-0030a375e02a38e714726452f6d87454 *man/binData.Rd
+2c7a7784c066a27114e28c7e8c1459f2 *man/binData.Rd
 5d3a4924aa6c305f8a765ebbeac57c52 *man/df.Rd
 f4d13b0420390f18673887628f4c8cf0 *man/indActogram.Rd
 ba33b656af6b6c413b8a0bedfcae6cb9 *man/indActogramWake.Rd
@@ -52,7 +53,8 @@ a71e5b84f6a5915e61529383288dea86 *man/profilesWake.Rd
 ea4e876e69274fae9df8ec1f6d456f82 *man/rosePlotsAct.Rd
 24906a1507ec16ad9a98d31251cc7482 *man/rosePlotsSleep.Rd
 58fdafb76032989e44a8a22b389d6855 *man/rosePlotsWake.Rd
-e3b020ad7101d60aab39a9ed5653dd48 *man/sleepData.Rd
-eea9dde530d3c52d30b893400eac9b28 *man/sleepStat.Rd
+4c692aa750d4ec76371342c313899bab *man/sleepData.Rd
+bd0a173abd1fb645a7ea9fd42ce5e702 *man/sleepOnsetBoutLength.Rd
+cede4e1607155c70a3d52f01771d01a1 *man/sleepStat.Rd
 3db95202d0b2a2baa8d3b159a3da9d2c *man/trimData.Rd
-3f42b440c2b071b28fc15593a85d7b9a *man/wakeData.Rd
+b68c4b18b6313c9013d3526f2c565608 *man/wakeData.Rd
