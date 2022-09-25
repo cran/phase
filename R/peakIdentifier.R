@@ -8,7 +8,7 @@
 #' @param filt.length The length of filter in indices. This defaults to 51.
 #' @param min.peak.dist The minimum distance between peaks to be picked (in indices). This defaults to 100.
 #' @param peak.ht.scal A scaling factor to identify peaks. This defaults to 0.5. A value of 0.5 will only find peaks that are at least half as tall as that of the tallest peak.
-#' @param windows A list of vectors defining the start and end of the windows (in ZT) for morning and evening peaks, respectively around which the algorithm should look for peaks. This defaults to list(c(18,6), c(6,18)). The first window is treated as the window for morning peak, and the second as the window for evening peak.
+#' @param ZT A vector defining the regions around which the algorithm must looks for peaks. This defaults to c(0,12). The first value in this vector is always assumed to be the morning peak.
 #' @param rm.channels All the channels that users want to remove from their averaging. This must be a vector, i.e., channels must be separated by commas. For instance, if users choose to remove channels 1 to 5, 25 and 32, then the input should be either c(1,2,3,4,5,25,32) or c(1:5,25,32). This defaults to an empty vector, meaning no individuals are removed from analysis.
 #'
 #' @importFrom plotly plot_ly add_trace subplot %>% layout
@@ -20,7 +20,7 @@
 #' @return A \code{list} with two items:
 #' \describe{
 #' \item{Plots}{A \code{plotly} \code{htmlwidget} with all the averaged activity overlayed with the smoothed data and markers to point out identified peaks in a 4-by-8 array.}
-#' \item{Data}{A \code{matrix} \code{array} with 32 rows (one for each fly) and 3 columns (Channel/Fly identity, Morning peak phase and Evening peak phase (measured in ZT)).}
+#' \item{Data}{A \code{matrix} \code{array} with 32 rows (one for each fly) and 9 columns (Channel/Fly identity, Phases of morning peak onset, maxima and offset, Morning peak height, Phases of evening peak onset, maxima and offset, and Evening peak height (all phases are measured in ZT)).}
 #' }
 #' 
 #'
@@ -31,7 +31,7 @@
 #' n.days = 3, bin = 1, t.cycle = 24)
 #' pks <- peakIdentifier(data = td)
 
-peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist = 100, peak.ht.scal = 0.5, windows = list(c(18,6), c(6,18)), rm.channels = c()) {
+peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist = 100, peak.ht.scal = 0.5, ZT = c(0,12), rm.channels = c()) {
   
   requireNamespace("plotly")
   requireNamespace("pracma")
@@ -148,6 +148,28 @@ peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist
             size = 15
           )
         )%>%
+        add_trace(
+          x = pks[,3],
+          y = 2,
+          type = "scatter",
+          mode = "markers",
+          marker = list(
+            color = "green",
+            symbol = "star-triangle-down",
+            size = 10
+          )
+        )%>%
+        add_trace(
+          x = pks[,4],
+          y = 2,
+          type = "scatter",
+          mode = "markers",
+          marker = list(
+            color = "cyan",
+            symbol = "star-triangle-down",
+            size = 10
+          )
+        )%>%
         layout(
           xaxis = ax,
           yaxis = ay
@@ -160,8 +182,11 @@ peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist
       )
     
     
-    phase <- matrix(NA, nrow = 32, ncol = 3)
-    colnames(phase) <- c("Channel", "Morning Peak", "Evening Peak")
+    phase <- matrix(NA, nrow = 32, ncol = 9)
+    colnames(phase) <- c("Channel", "M-Peak.onset", "M-Peak", "M-Peak.offset",
+                         "M-Peak.height",
+                         "E-Peak.onset", "E-Peak", "E-Peak.offset",
+                         "E-Peak.height")
     
     phase[1:32,"Channel"] <- 1:32
     
@@ -172,24 +197,18 @@ peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist
       }
       pks <- pracma::findpeaks(xx, minpeakdistance = min.peak.dist, minpeakheight = max(xx)*peak.ht.scal)
       
-      pks.zt <- dat[pks[,2],1]
-      morn.peak.times <- windows[[1]]
-      eve.peak.times <- windows[[2]]
+      morn.peak.ind <- which(abs(dat[pks[,2],1] - ZT[1]) == min(abs(dat[pks[,2],1] - ZT[1])))
+      eve.peak.ind <- which(abs(dat[pks[,2],1] - ZT[2]) == min(abs(dat[pks[,2],1] - ZT[2])))
       
-      pks.morn <- pks.zt[pks.zt < morn.peak.times[2] | pks.zt > morn.peak.times[1]]
-      pks.eve <- pks.zt[pks.zt > eve.peak.times[1] & pks.zt < eve.peak.times[2]]
+      phase[i,"M-Peak.onset"] = dat[pks[morn.peak.ind,3],1]
+      phase[i,"M-Peak"] = dat[pks[morn.peak.ind,2],1]
+      phase[i,"M-Peak.offset"] = dat[pks[morn.peak.ind,4],1]
+      phase[i,"M-Peak.height"] = dat[pks[morn.peak.ind,1],1]
       
-      if (pracma::isempty(pks.eve)) {
-        phase[i, "Evening Peak"] = NA
-      } else {
-        phase[i, "Evening Peak"] = pks.eve
-      }
-      
-      if (pracma::isempty(pks.morn)) {
-        phase[i, "Morning Peak"] = NA
-      } else {
-        phase[i, "Morning Peak"] = pks.morn
-      }
+      phase[i,"E-Peak.onset"] = dat[pks[eve.peak.ind,3],1]
+      phase[i,"E-Peak"] = dat[pks[eve.peak.ind,2],1]
+      phase[i,"E-Peak.offset"] = dat[pks[eve.peak.ind,4],1]
+      phase[i,"E-Peak.height"] = dat[pks[eve.peak.ind,1],1]
     }
     
     output <- list(
@@ -199,5 +218,5 @@ peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist
     
     return(output)
   }
-
+  
 }

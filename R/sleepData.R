@@ -26,50 +26,109 @@
 #' sd <- sleepData(data = td[,1:15])
 
 sleepData <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24) {
-  raw <- data[,-c(1:10)]
-  s_per_day <- (60/bin)*t.cycle
-
-  raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] >= 1] <- -1
-  raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == 0] <- 1
-  raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == -1] <- 0
-
-  binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
-  sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
-  index.sleep <- seq(1, length(raw[,1]), by = bin)
-
-
+  
   if (length(sleep.def) == 1) {
+    
+    raw <- data[,-c(1:10)]
+    
+    for (i in 1:length(raw[1,])) {
+      x <- raw[,i]
+      y <- rle(x)
+      d_y <- as.data.frame(unclass(y))
+      d_y$end <- cumsum(d_y$lengths)
+      d_y$start <- d_y$end - d_y$lengths + 1
+      
+      dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def)
+      
+      if(length(dd_y[,1]) == 0) {
+        x = 0
+      } else {
+        for (j in 1:length(dd_y[,1])) {
+          x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+        }
+      }
+      
+      x[x > -1] = 0
+      x[x == -1] = 1
+      raw[,i] <- x
+    }
+    
+    s_per_day <- (60/bin)*t.cycle
+    
+    binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+    sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+    index.sleep <- seq(1, length(raw[,1]), by = bin)
+    
     for (i in 1:length(index.sleep)) {
       for (j in 1:length(raw[1,])) {
         x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-        y <- rle(x)
-        d_y <- as.data.frame(unclass(y))
-        dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1])
-        sleep[i,j] <- sum(dd_y$lengths)
+        sleep[i,j] <- sum(x)
       }
     }
+    
+    column.names <- c()
+    for (i in 1:length(sleep[1,])) {
+      column.names[i] <- paste("I",i, sep = "")
+    }
+    colnames(sleep) <- column.names
+    
+    t <- seq((bin/60), t.cycle, by = (bin/60))
+    zt <- as.data.frame(rep(t, length(sleep[,1])/(t.cycle*(60/bin))))
+    colnames(zt) <- c("ZT")
+    
+    data.plot <- cbind(zt,sleep)
+    return(data.plot)
+    
   } else if (length(sleep.def) == 2) {
+    
+    raw <- data[,-c(1:10)]
+    
+    for (i in 1:length(raw[1,])) {
+      x <- raw[,i]
+      y <- rle(x)
+      d_y <- as.data.frame(unclass(y))
+      d_y$end <- cumsum(d_y$lengths)
+      d_y$start <- d_y$end - d_y$lengths + 1
+      
+      dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def[1] & lengths < sleep.def[2])
+      
+      if(length(dd_y[,1]) == 0) {
+        x = 0
+      } else {
+        for (j in 1:length(dd_y[,1])) {
+          x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+        }
+      }
+      
+      x[x > -1] = 0
+      x[x == -1] = 1
+      raw[,i] <- x
+    }
+    
+    s_per_day <- (60/bin)*t.cycle
+    
+    binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+    sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+    index.sleep <- seq(1, length(raw[,1]), by = bin)
+    
     for (i in 1:length(index.sleep)) {
       for (j in 1:length(raw[1,])) {
         x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-        y <- rle(x)
-        d_y <- as.data.frame(unclass(y))
-        dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1] & d_y$lengths <= sleep.def[2])
-        sleep[i,j] <- sum(dd_y$lengths)
+        sleep[i,j] <- sum(x)
       }
     }
+    
+    column.names <- c()
+    for (i in 1:length(sleep[1,])) {
+      column.names[i] <- paste("I",i, sep = "")
+    }
+    colnames(sleep) <- column.names
+    
+    t <- seq((bin/60), t.cycle, by = (bin/60))
+    zt <- as.data.frame(rep(t, length(sleep[,1])/(t.cycle*(60/bin))))
+    colnames(zt) <- c("ZT")
+    
+    data.plot <- cbind(zt,sleep)
+    return(data.plot)
   }
-
-  column.names <- c()
-  for (i in 1:length(sleep[1,])) {
-    column.names[i] <- paste("I",i, sep = "")
-  }
-  colnames(sleep) <- column.names
-
-  t <- seq((bin/60), t.cycle, by = (bin/60))
-  zt <- as.data.frame(rep(t, length(sleep[,1])/(t.cycle*(60/bin))))
-  colnames(zt) <- c("ZT")
-
-  data.plot <- cbind(zt,sleep)
-  return(data.plot)
 }

@@ -4,10 +4,10 @@
 \alias{sleepStat}
 \title{Computes and tabulates day-time and night-time sleep statistics}
 \usage{
-sleepStat(input, sleep.def = c(5), t.cycle = 24, photoperiod = 12)
+sleepStat(data, sleep.def = c(5), t.cycle = 24, photoperiod = 12)
 }
 \arguments{
-\item{input}{Input data file. The input for this function must be the output of the function trimData(). See ??trimData().}
+\item{data}{Input data file. The input for this function must be the output of the function trimData(). See ??trimData().}
 
 \item{sleep.def}{Definition of sleep. Traditionally, a single bout of sleep is defined as any duration of inactivity that is equal to or greater than 5-minutes. However, sometimes it may be of interest to examine longer bouts of sleep or specific bout durations; sleep.def allows users to change the definition of sleep. The default input is a single value vector of value 5. If users wish to analyse sleep only between 5 to 20 mins, the input must be c(5,20).}
 
@@ -16,14 +16,16 @@ sleepStat(input, sleep.def = c(5), t.cycle = 24, photoperiod = 12)
 \item{photoperiod}{Duration (in hours) of what can be considered day-phase. This defaults to 12.}
 }
 \value{
-A \code{matrix} \code{array} matrix with 32 rows (one for each fly) and 7 columns:
+A \code{matrix} \code{array} matrix with 32 rows (one for each fly) and 9 columns:
 \describe{
 \item{Channel}{Fly identity.}
 \item{Day.BoutNumber}{Number of sleep bouts in the user defined day time.}
-\item{Day.BoutDuration}{Mean sleep duration in the user defined day time.}
+\item{Day.BoutDuration.Mean}{Mean sleep duration in the user defined day time.}
+\item{Day.BoutDuration.Median}{Median sleep duration in the user defined day time.}
 \item{Day.Latency}{Time taken for the first sleep bout to occur in the user defined day time.}
 \item{Night.BoutNumber}{Number of sleep bouts in the user defined night time.}
-\item{Night.BoutDuration}{Mean sleep duration in the user defined night time.}
+\item{Night.BoutDuration.Mean}{Mean sleep duration in the user defined night time.}
+\item{Night.BoutDuration.Median}{Median sleep duration in the user defined night time.}
 \item{Night.Latency}{Time taken for the first sleep bout to occur in the user defined night time.}
 }
 }
@@ -33,5 +35,5 @@ This function allows users to estimate day-time and night-time average sleep bou
 \examples{
 td <- trimData(data = df, start.date = "19 Dec 20", start.time = "21:00",
 n.days = 10, bin = 1, t.cycle = 24)
-slp.stat <- sleepStat(input = td)
+slp.stat <- sleepStat(data = td)
 }

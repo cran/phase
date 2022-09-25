@@ -11,14 +11,14 @@
 #' @param rm.channels A vector of channels from a DAM monitor that must be discarded from analysis. If channels 1 to 5 must be removed, type in c(1:5). If channels 1 to 5 and 10 to 13 and 15 and 17 must be removed, type in c(1:5,10:13,15,17). Default is to include all individuals.
 #'
 #' @importFrom circular rho.circular circular
-#' @importFrom plotly plot_ly add_trace layout %>% subplot
+#' @importFrom plotly plot_ly add_trace layout %>% subplot toRGB
 #' @importFrom grDevices rgb
 #' @importFrom stats aggregate fitted lm na.omit sd
 #' 
 #' @return A \code{list} with two items:
 #' \describe{
 #' \item{Plot}{A \code{plotly} \code{htmlwidget} with the center of mass plotted and averages plotted for each window.}
-#' \item{Data}{A \code{data.frame} with 32 rows (one for each fly) and 1 + (number of user defined windows * 2) columns (First column contains channel/fly identity and the remaning columns contain the fly-wise consolidation and center of mass values.)}
+#' \item{Data}{A \code{data.frame} with 32 rows (one for each fly) and 1 + (number of user defined windows * 2) columns (First column contains channel/fly identity and the remaining columns contain the fly-wise consolidation and center of mass values.)}
 #' }
 #'
 #' @export CoM
@@ -31,6 +31,7 @@
 #' phase <- CoM(input = bd)
 
 CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list(c(21, 3), c(9, 15)), rm.channels = c()) {
+
   requireNamespace("plotly")
   requireNamespace("circular")
   
@@ -59,8 +60,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         
         win.size <- length(df[,1] * (bin/60))
         
-        # theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
-        theta <- as.matrix(df[,1] * (360/(win.size * (bin/60))))
+        theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
         
         sin_theta <- as.matrix(sin(theta*(pi/180)))
         cos_theta <- as.matrix(cos(theta*(pi/180)))
@@ -126,7 +126,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         colnames(output)[phase.index[ii]] <- paste("Phase_", "Window.", ii, sep = "")
       }
       for (ii in 1:length(consol.index)) {
-        colnames(output)[consol.index[ii]] <- paste("Consolidation/SleepGate_", "Window.", ii, sep = "")
+        colnames(output)[consol.index[ii]] <- paste("Consolidation_", "Window.", ii, sep = "")
       }
       
       chan.num.col <- data.frame(
@@ -160,7 +160,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,1], na.rm = T))*360/t.cycle, (mean(output[,1], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -174,7 +174,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,3], na.rm = T))*360/t.cycle, (mean(output[,3], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -187,13 +187,6 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
           showlegend = F
         )%>%
         layout(
-          margin = list(
-            t = 50,
-            b = 50,
-            l = 100,
-            r = 100,
-            pad = 2
-          ),
           polar = list(
             angularaxis = list(
               direction = 'clockwise',
@@ -214,7 +207,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               ticktext = as.list(
                 c("00", "03", "06", "09", "12", "15", "18", "21")
               ),
@@ -241,7 +234,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               range = c(0, 1.1)
             )
           )
@@ -274,8 +267,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         
         win.size <- length(df[,1] * (bin/60))
         
-        # theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
-        theta <- as.matrix(df[,1] * (360/(win.size * (bin/60))))
+        theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
         
         sin_theta <- as.matrix(sin(theta*(pi/180)))
         cos_theta <- as.matrix(cos(theta*(pi/180)))
@@ -341,7 +333,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         colnames(output)[phase.index[ii]] <- paste("Phase_", "Window.", ii, sep = "")
       }
       for (ii in 1:length(consol.index)) {
-        colnames(output)[consol.index[ii]] <- paste("Consolidation/SleepGate_", "Window.", ii, sep = "")
+        colnames(output)[consol.index[ii]] <- paste("Consolidation_", "Window.", ii, sep = "")
       }
       
       chan.num.col <- data.frame(
@@ -375,7 +367,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,1], na.rm = T))*360/t.cycle, (mean(output[,1], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -389,7 +381,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,3], na.rm = T))*360/t.cycle, (mean(output[,3], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -402,13 +394,6 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
           showlegend = F
         )%>%
         layout(
-          margin = list(
-            t = 50,
-            b = 50,
-            l = 100,
-            r = 100,
-            pad = 2
-          ),
           polar = list(
             angularaxis = list(
               direction = 'clockwise',
@@ -429,7 +414,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               ticktext = as.list(
                 c("00", "03", "06", "09", "12", "15", "18", "21")
               ),
@@ -456,7 +441,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               range = c(0, 1.1)
             )
           )
@@ -489,8 +474,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         
         win.size <- length(df[,1] * (bin/60))
         
-        # theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
-        theta <- as.matrix(df[,1] * (360/(win.size * (bin/60))))
+        theta <- as.matrix(seq(0, length(df[,1]), by = (bin/60))*360/win.size)
         
         sin_theta <- as.matrix(sin(theta*(pi/180)))
         cos_theta <- as.matrix(cos(theta*(pi/180)))
@@ -556,7 +540,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         colnames(output)[phase.index[ii]] <- paste("Phase_", "Window.", ii, sep = "")
       }
       for (ii in 1:length(consol.index)) {
-        colnames(output)[consol.index[ii]] <- paste("Consolidation/SleepGate_", "Window.", ii, sep = "")
+        colnames(output)[consol.index[ii]] <- paste("Consolidation_", "Window.", ii, sep = "")
       }
       
       chan.num.col <- data.frame(
@@ -590,7 +574,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,1]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,1], na.rm = T))*360/t.cycle, (mean(output[,1], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -604,7 +588,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
         )%>%
         add_trace(
           r = c(0,
-                circular::rho.circular(circular::circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
+                rho.circular(circular(((output[,3]*360/t.cycle)*pi/180)), na.rm = T)),
           theta = c((mean(output[,3], na.rm = T))*360/t.cycle, (mean(output[,3], na.rm = T))*360/t.cycle),
           mode = "lines+markers",
           marker = list(
@@ -617,13 +601,6 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
           showlegend = F
         )%>%
         layout(
-          margin = list(
-            t = 50,
-            b = 50,
-            l = 100,
-            r = 100,
-            pad = 2
-          ),
           polar = list(
             angularaxis = list(
               direction = 'clockwise',
@@ -644,7 +621,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               ticktext = as.list(
                 c("00", "03", "06", "09", "12", "15", "18", "21")
               ),
@@ -671,7 +648,7 @@ CoM <- function (input, data = "Activity", bin = 30, t.cycle = 24, window = list
               linecolor = "black",
               ticks = "outside",
               ticklen = 7,
-              tickcolor = "black",
+              tickcolor = toRGB("black"),
               range = c(0, 1.1)
             )
           )
