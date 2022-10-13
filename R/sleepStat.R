@@ -18,10 +18,12 @@
 #' \item{Day.BoutDuration.Mean}{Mean sleep duration in the user defined day time.}
 #' \item{Day.BoutDuration.Median}{Median sleep duration in the user defined day time.}
 #' \item{Day.Latency}{Time taken for the first sleep bout to occur in the user defined day time.}
+#' \item{Day.Total}{Total minutes of daytime sleep.}
 #' \item{Night.BoutNumber}{Number of sleep bouts in the user defined night time.}
 #' \item{Night.BoutDuration.Mean}{Mean sleep duration in the user defined night time.}
 #' \item{Night.BoutDuration.Median}{Median sleep duration in the user defined night time.}
 #' \item{Night.Latency}{Time taken for the first sleep bout to occur in the user defined night time.}
+#' \item{Night.Total}{Total minutes of nighttime sleep.}
 #' }
 #'
 #' @export sleepStat
@@ -95,11 +97,11 @@ sleepStat <- function(data, sleep.def = c(5), t.cycle = 24, photoperiod = 12) {
     cyc.wise.split[[i]] <- raw[cyc.wise.index[i]:(cyc.wise.index[i]+(1440-1)),]
   }
   
-  output <- matrix(NA, nrow = 32, ncol = 9)
+  output <- matrix(NA, nrow = 32, ncol = 11)
   colnames(output) <- c("Channel", "Day.BoutNumber", "Day.BoutDuration.Mean", "Day.BoutDuration.Median",
-                        "Day.Latency",
+                        "Day.Latency", "Day.Total",
                         "Night.BoutNumber", "Night.BoutDuration.Mean", "Night.BoutDuration.Median",
-                        "Night.Latency")
+                        "Night.Latency", "Night.Total")
   for.row.nam <- seq(1, 32, by = 1)
   
   output[,"Channel"] <- for.row.nam
@@ -108,15 +110,20 @@ sleepStat <- function(data, sleep.def = c(5), t.cycle = 24, photoperiod = 12) {
   day.cyc.boutdur.mean <- matrix(NA, nrow = 32, ncol = n.days)
   day.cyc.boutdur.median <- matrix(NA, nrow = 32, ncol = n.days)
   day.cyc.boutlatency <- matrix(NA, nrow = 32, ncol = n.days)
+  day.tot <- matrix(NA, nrow = 32, ncol = n.days)
   
   night.cyc.boutnum <- matrix(NA, nrow = 32, ncol = n.days)
   night.cyc.boutdur.mean <- matrix(NA, nrow = 32, ncol = n.days)
   night.cyc.boutdur.median <- matrix(NA, nrow = 32, ncol = n.days)
   night.cyc.boutlatency <- matrix(NA, nrow = 32, ncol = n.days)
+  night.tot <- matrix(NA, nrow = 32, ncol = n.days)
   
   for (i in 1:length(cyc.wise.split)) {
     day <- cyc.wise.split[[i]][(1:(photoperiod*60)),]
     night <- cyc.wise.split[[i]][(((photoperiod*60) + 1):1440),]
+    
+    day.tot[,i] = colSums(day)
+    night.tot[,i] = colSums(night)
     
     for (j in 1:length(day[1,])) {
       d <- day[,j]
@@ -146,17 +153,20 @@ sleepStat <- function(data, sleep.def = c(5), t.cycle = 24, photoperiod = 12) {
   }
   
   for (i in 1:length(raw[1,])) {
-    output[i,"Day.BoutNumber"] = mean(day.cyc.boutnum[i,])
-    output[i,"Night.BoutNumber"] = mean(night.cyc.boutnum[i,])
+    output[i,"Day.BoutNumber"] = mean(day.cyc.boutnum[i,], na.rm = T)
+    output[i,"Night.BoutNumber"] = mean(night.cyc.boutnum[i,], na.rm = T)
     
-    output[i,"Day.BoutDuration.Mean"] = mean(day.cyc.boutdur.mean[i,])
-    output[i,"Night.BoutDuration.Mean"] = mean(night.cyc.boutdur.mean[i,])
+    output[i,"Day.BoutDuration.Mean"] = mean(day.cyc.boutdur.mean[i,], na.rm = T)
+    output[i,"Night.BoutDuration.Mean"] = mean(night.cyc.boutdur.mean[i,], na.rm = T)
     
-    output[i,"Day.BoutDuration.Median"] = mean(day.cyc.boutdur.median[i,])
-    output[i,"Night.BoutDuration.Median"] = mean(night.cyc.boutdur.median[i,])
+    output[i,"Day.BoutDuration.Median"] = mean(day.cyc.boutdur.median[i,], na.rm = T)
+    output[i,"Night.BoutDuration.Median"] = mean(night.cyc.boutdur.median[i,], na.rm = T)
     
-    output[i,"Day.Latency"] = mean(day.cyc.boutlatency[i,])
-    output[i,"Night.Latency"] = mean(night.cyc.boutlatency[i,])
+    output[i,"Day.Latency"] = mean(day.cyc.boutlatency[i,], na.rm = T)
+    output[i,"Night.Latency"] = mean(night.cyc.boutlatency[i,], na.rm = T)
+    
+    output[i,"Day.Total"] = mean(day.tot[i,], na.rm = T)
+    output[i,"Night.Total"] = mean(night.tot[i,], na.rm = T)
   }
   
   return(output)

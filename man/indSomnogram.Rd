@@ -10,7 +10,8 @@ indSomnogram(
   bin = 30,
   t.cycle = 24,
   ind = 1,
-  key.somno = 1
+  key.somno = 1,
+  color = rgb(0, 0, 0, 1)
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ indSomnogram(
 \item{ind}{The channel number (or individual) whose periodogram must be plotted.}
 
 \item{key.somno}{Key for reactive input tables in the shiny app.}
+
+\item{color}{Color of somnograms in rgb format. The input for this must be a vector with 4 values, i.e., r,g,b,transparency. The values for r,g,b can only be between 0 and 1. 0,0,0 would be black and 1,1,1 would be white. Transparency values can also go from 0 to 1, 0 being fully transparent and 1 being fully opaque.}
 }
 \value{
 A \code{plotly} \code{htmlwidget} with the somnogram of a user defined fly.

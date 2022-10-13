@@ -4,7 +4,7 @@
 \alias{allActograms}
 \title{Generate actograms}
 \usage{
-allActograms(data, bin = 30, t.cycle = 24)
+allActograms(data, bin = 30, t.cycle = 24, color = rgb(0, 0, 0, 1))
 }
 \arguments{
 \item{data}{Input data file. The input for this function must be the output of the function binData(). See ??binData().}
@@ -12,6 +12,8 @@ allActograms(data, bin = 30, t.cycle = 24)
 \item{bin}{Intervals in which data are saved (in minutes). This defaults to 30.}
 
 \item{t.cycle}{Define the period of the environmental cycle or a single day in hours. This defaults to 24.}
+
+\item{color}{Color of actograms in rgb format. The input for this must be a vector with 4 values, i.e., r,g,b,transparency. The values for r,g,b can only be between 0 and 1. 0,0,0 would be black and 1,1,1 would be white. Transparency values can also go from 0 to 1, 0 being fully transparent and 1 being fully opaque.}
 }
 \value{
 A \code{plotly} \code{htmlwidget} with 32 actograms in a 4-by-8 array.

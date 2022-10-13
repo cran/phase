@@ -23,10 +23,12 @@ A \code{matrix} \code{array} matrix with 32 rows (one for each fly) and 9 column
 \item{Day.BoutDuration.Mean}{Mean sleep duration in the user defined day time.}
 \item{Day.BoutDuration.Median}{Median sleep duration in the user defined day time.}
 \item{Day.Latency}{Time taken for the first sleep bout to occur in the user defined day time.}
+\item{Day.Total}{Total minutes of daytime sleep.}
 \item{Night.BoutNumber}{Number of sleep bouts in the user defined night time.}
 \item{Night.BoutDuration.Mean}{Mean sleep duration in the user defined night time.}
 \item{Night.BoutDuration.Median}{Median sleep duration in the user defined night time.}
 \item{Night.Latency}{Time taken for the first sleep bout to occur in the user defined night time.}
+\item{Night.Total}{Total minutes of nighttime sleep.}
 }
 }
 \description{

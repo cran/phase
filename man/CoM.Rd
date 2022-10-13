@@ -16,7 +16,7 @@ CoM(
 \arguments{
 \item{input}{Input data file. The input for this function must be the output of the function binData(), sleepData() or ??wakeData(). See ??binData(), ??sleepData() and ??wakeData().}
 
-\item{data}{If the input for this function is the output of binData(), sleepData() or wakeData(), then this must be "Activity", "Sleep" or "Wakefulness", respectively.}
+\item{data}{If the input for this function is the output of binData() or sleepData(), then this must be "Activity" or "Sleep", respectively.}
 
 \item{bin}{Intervals in which input data are saved (in minutes). This defaults to 30.}
 

@@ -6,6 +6,7 @@
 #' @param data Input data file. The input for this function must be the output of the function binData(). See ??binData().
 #' @param bin Intervals in which data are saved (in minutes). This defaults to 30.
 #' @param t.cycle Define the period of the environmental cycle or a single day in hours. This defaults to 24.
+#' @param color Color of actograms in rgb format. The input for this must be a vector with 4 values, i.e., r,g,b,transparency. The values for r,g,b can only be between 0 and 1. 0,0,0 would be black and 1,1,1 would be white. Transparency values can also go from 0 to 1, 0 being fully transparent and 1 being fully opaque.
 #' 
 #' @importFrom zoo rollapply
 #' @importFrom plotly plot_ly add_trace layout %>% subplot
@@ -24,7 +25,7 @@
 #' actograms <- allActograms(data = bd)
 
 
-allActograms <- function(data, bin = 30, t.cycle = 24) {
+allActograms <- function(data, bin = 30, t.cycle = 24, color = rgb(0,0,0,1)) {
   requireNamespace("plotly")
   requireNamespace("zoo")
   # library(plotly)
@@ -62,9 +63,9 @@ allActograms <- function(data, bin = 30, t.cycle = 24) {
           y = a[,j]/max(a[,j]),
           type = "bar",
           marker = list(
-            color = "green",
+            color = color,
             line = list(
-              color = "green"
+              color = color
             )
           )
         )%>%

@@ -8,6 +8,7 @@
 #' @param sleep.def Definition of sleep. Traditionally, a single bout of sleep is defined as any duration of inactivity that is equal to or greater than 5-minutes. However, sometimes it may be of interest to examine longer bouts of sleep or specific bout durations; sleep.def allows users to change the definition of sleep. The default input is a single value vector of value 5. If users wish to analyse sleep only between 5 to 20 mins, the input must be c(5,20).
 #' @param bin Intervals in which data are saved (in minutes). This defaults to 30. The value of bin cannot be lower than that of sleep.def.
 #' @param t.cycle Define the period of the environmental cycle or a single day in hours. This defaults to 24.
+#' @param color Color of somnograms in rgb format. The input for this must be a vector with 4 values, i.e., r,g,b,transparency. The values for r,g,b can only be between 0 and 1. 0,0,0 would be black and 1,1,1 would be white. Transparency values can also go from 0 to 1, 0 being fully transparent and 1 being fully opaque.
 #'
 #' @importFrom zoo rollapply
 #' @importFrom plotly plot_ly add_trace layout %>% subplot
@@ -23,7 +24,7 @@
 #' n.days = 3, bin = 1, t.cycle = 24)
 #' somnograms <- allSomnograms(data = td[,1:15])
 
-allSomnograms <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24) {
+allSomnograms <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, color = rgb(0,0,0,1)) {
   requireNamespace("plotly")
   requireNamespace("zoo")
   
@@ -35,34 +36,77 @@ allSomnograms <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24) {
     s_per_day <- (60/bin)*t.cycle
     dummy <- matrix(0, nrow = s_per_day*(n.plot-1), ncol = 32)
     
-    raw <- data[,-c(1:10)]
-    
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] >= 1] <- -1
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == 0] <- 1
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == -1] <- 0
-    
-    binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
-    sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
-    index.sleep <- seq(1, length(raw[,1]), by = bin)
-    
     if (length(sleep.def) == 1) {
+      
+      raw <- data[,-c(1:10)]
+      
+      for (i in 1:length(raw[1,])) {
+        x <- raw[,i]
+        y <- rle(x)
+        d_y <- as.data.frame(unclass(y))
+        d_y$end <- cumsum(d_y$lengths)
+        d_y$start <- d_y$end - d_y$lengths + 1
+        
+        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def)
+        
+        if(length(dd_y[,1]) == 0) {
+          x = 0
+        } else {
+          for (j in 1:length(dd_y[,1])) {
+            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+          }
+        }
+        
+        x[x > -1] = 0
+        x[x == -1] = 1
+        raw[,i] <- x
+      }
+      
+      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      
       for (i in 1:length(index.sleep)) {
         for (j in 1:length(raw[1,])) {
           x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-          y <- rle(x)
-          d_y <- as.data.frame(unclass(y))
-          dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1])
-          sleep[i,j] <- sum(dd_y$lengths)
+          sleep[i,j] <- sum(x)
         }
       }
+      
     } else if (length(sleep.def) == 2) {
+      
+      raw <- data[,-c(1:10)]
+      
+      for (i in 1:length(raw[1,])) {
+        x <- raw[,i]
+        y <- rle(x)
+        d_y <- as.data.frame(unclass(y))
+        d_y$end <- cumsum(d_y$lengths)
+        d_y$start <- d_y$end - d_y$lengths + 1
+        
+        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def[1] & lengths < sleep.def[2])
+        
+        if(length(dd_y[,1]) == 0) {
+          x = 0
+        } else {
+          for (j in 1:length(dd_y[,1])) {
+            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+          }
+        }
+        
+        x[x > -1] = 0
+        x[x == -1] = 1
+        raw[,i] <- x
+      }
+      
+      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      
       for (i in 1:length(index.sleep)) {
         for (j in 1:length(raw[1,])) {
           x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-          y <- rle(x)
-          d_y <- as.data.frame(unclass(y))
-          dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1] & d_y$lengths <= sleep.def[2])
-          sleep[i,j] <- sum(dd_y$lengths)
+          sleep[i,j] <- sum(x)
         }
       }
     }
@@ -93,9 +137,9 @@ allSomnograms <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24) {
           y = a[,j]/max(a[,j]),
           type = "bar",
           marker = list(
-            color = "darkblue",
+            color = color,
             line = list(
-              color = "darkblue"
+              color = color
             )
           )
         )%>%

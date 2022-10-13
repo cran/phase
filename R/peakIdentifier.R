@@ -200,15 +200,29 @@ peakIdentifier <- function(data, filt.order = 3, filt.length = 51, min.peak.dist
       morn.peak.ind <- which(abs(dat[pks[,2],1] - ZT[1]) == min(abs(dat[pks[,2],1] - ZT[1])))
       eve.peak.ind <- which(abs(dat[pks[,2],1] - ZT[2]) == min(abs(dat[pks[,2],1] - ZT[2])))
       
-      phase[i,"M-Peak.onset"] = dat[pks[morn.peak.ind,3],1]
-      phase[i,"M-Peak"] = dat[pks[morn.peak.ind,2],1]
-      phase[i,"M-Peak.offset"] = dat[pks[morn.peak.ind,4],1]
-      phase[i,"M-Peak.height"] = dat[pks[morn.peak.ind,1],1]
+      if (is.na(morn.peak.ind)) {
+        phase[i,"M-Peak.onset"] = NA
+        phase[i,"M-Peak"] = NA
+        phase[i,"M-Peak.offset"] = NA
+        phase[i,"M-Peak.height"] = NA
+      } else {
+        phase[i,"M-Peak.onset"] = dat[pks[morn.peak.ind,3],1]
+        phase[i,"M-Peak"] = dat[pks[morn.peak.ind,2],1]
+        phase[i,"M-Peak.offset"] = dat[pks[morn.peak.ind,4],1]
+        phase[i,"M-Peak.height"] = dat[pks[morn.peak.ind,1],1]
+      }
       
-      phase[i,"E-Peak.onset"] = dat[pks[eve.peak.ind,3],1]
-      phase[i,"E-Peak"] = dat[pks[eve.peak.ind,2],1]
-      phase[i,"E-Peak.offset"] = dat[pks[eve.peak.ind,4],1]
-      phase[i,"E-Peak.height"] = dat[pks[eve.peak.ind,1],1]
+      if (is.na(eve.peak.ind)) {
+        phase[i,"E-Peak.onset"] = NA
+        phase[i,"E-Peak"] = NA
+        phase[i,"E-Peak.offset"] = NA
+        phase[i,"E-Peak.height"] = NA
+      } else {
+        phase[i,"E-Peak.onset"] = dat[pks[eve.peak.ind,3],1]
+        phase[i,"E-Peak"] = dat[pks[eve.peak.ind,2],1]
+        phase[i,"E-Peak.offset"] = dat[pks[eve.peak.ind,4],1]
+        phase[i,"E-Peak.height"] = dat[pks[eve.peak.ind,1],1]
+      }
     }
     
     output <- list(

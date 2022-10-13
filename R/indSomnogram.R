@@ -10,6 +10,7 @@
 #' @param t.cycle Define the period of the environmental cycle or a single day in hours. This defaults to 24.
 #' @param ind The channel number (or individual) whose periodogram must be plotted.
 #' @param key.somno Key for reactive input tables in the shiny app.
+#' @param color Color of somnograms in rgb format. The input for this must be a vector with 4 values, i.e., r,g,b,transparency. The values for r,g,b can only be between 0 and 1. 0,0,0 would be black and 1,1,1 would be white. Transparency values can also go from 0 to 1, 0 being fully transparent and 1 being fully opaque.
 #'
 #' @importFrom zoo rollapply
 #' @importFrom plotly plot_ly add_trace layout %>% subplot
@@ -28,7 +29,7 @@
 #' }
 
 
-indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1, key.somno = 1) {
+indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1, key.somno = 1, color = rgb(0,0,0,1)) {
 
   requireNamespace("plotly")
   requireNamespace("zoo")
@@ -41,32 +42,78 @@ indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1
     s_per_day <- (60/bin)*t.cycle
     dummy <- matrix(0, nrow = s_per_day*(n.plot-1), ncol = 1)
     
-    pre.raw <- data[,-c(1:10)]
-    raw <- as.matrix(pre.raw[,c(ind)])
-    
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] >= 1] <- -1
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == 0] <- 1
-    raw[,1:length(raw[1,])][raw[,1:length(raw[1,])] == -1] <- 0
-    
-    binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
-    sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 1)
-    index.sleep <- seq(1, length(raw[,1]), by = bin)
-    
     if (length(sleep.def) == 1) {
-      for (i in 1:length(index.sleep)) {
-        x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),1]
+      
+      raw <- data[,-c(1:10)]
+      
+      for (i in 1:length(raw[1,])) {
+        x <- raw[,i]
         y <- rle(x)
         d_y <- as.data.frame(unclass(y))
-        dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1])
-        sleep[i,1] <- sum(dd_y$lengths)
+        d_y$end <- cumsum(d_y$lengths)
+        d_y$start <- d_y$end - d_y$lengths + 1
+        
+        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def)
+        
+        if(length(dd_y[,1]) == 0) {
+          x = 0
+        } else {
+          for (j in 1:length(dd_y[,1])) {
+            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+          }
+        }
+        
+        x[x > -1] = 0
+        x[x == -1] = 1
+        raw[,i] <- x
       }
-    } else if (length(sleep.def) == 2) {
+      
+      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      
       for (i in 1:length(index.sleep)) {
-        x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),1]
+        for (j in 1:length(raw[1,])) {
+          x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
+          sleep[i,j] <- sum(x)
+        }
+      }
+      
+    } else if (length(sleep.def) == 2) {
+      
+      raw <- data[,-c(1:10)]
+      
+      for (i in 1:length(raw[1,])) {
+        x <- raw[,i]
         y <- rle(x)
         d_y <- as.data.frame(unclass(y))
-        dd_y <- subset(d_y, d_y$values == 1 & d_y$lengths >= sleep.def[1] & d_y$lengths <= sleep.def[2])
-        sleep[i,1] <- sum(dd_y$lengths)
+        d_y$end <- cumsum(d_y$lengths)
+        d_y$start <- d_y$end - d_y$lengths + 1
+        
+        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def[1] & lengths < sleep.def[2])
+        
+        if(length(dd_y[,1]) == 0) {
+          x = 0
+        } else {
+          for (j in 1:length(dd_y[,1])) {
+            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
+          }
+        }
+        
+        x[x > -1] = 0
+        x[x == -1] = 1
+        raw[,i] <- x
+      }
+      
+      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
+      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      
+      for (i in 1:length(index.sleep)) {
+        for (j in 1:length(raw[1,])) {
+          x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
+          sleep[i,j] <- sum(x)
+        }
       }
     }
     
@@ -95,9 +142,9 @@ indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1
         y = a[,j]/max(a[,j]),
         type = "bar",
         marker = list(
-          color = "darkblue",
+          color = color,
           line = list(
-            color = "darkblue"
+            color = color
           )
         ),
         source = "actogram.phases",
