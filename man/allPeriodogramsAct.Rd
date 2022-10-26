@@ -40,7 +40,9 @@ A \code{list} with two items:
 This function generates a composite figure with periodogram plots for all flies in a DAM scanned monitor file. Input for this function must be an output from the trimData() function. The output of this function is a list with two components - (a) large plotly object with periodogram plots for all flies, and (b) a table which has channel wise information of significant period and adjusted power values, from the chosen time-series analysis method. This function requires the packages "plotly" and "zeitgebr".
 }
 \examples{
+\dontrun{
 td <- trimData(data = df, start.date = "19 Dec 20", start.time = "21:00",
 n.days = 5, bin = 1, t.cycle = 24)
 all.periodograms.act <- allPeriodogramsAct(data = td[,1:15])
+}
 }
