@@ -35,8 +35,10 @@ allActograms <- function(data, bin = 30, t.cycle = 24, color = rgb(0,0,0,1)) {
     n.plot = 2
     s_per_day <- (60/bin)*t.cycle
     dummy <- matrix(0, nrow = s_per_day*(n.plot-1), ncol = 32)
-    
+
     raw <- data[,-c(1)]
+    colnames(dummy) <- colnames(raw)
+    
     data <- rbind(dummy, raw, dummy)
     
     plots <- list()

@@ -45,7 +45,7 @@ binData <- function(data, input.bin = 1, output.bin = 30, t.cycle = 24) {
   colnames(binned) <- column.names
 
   time <- seq(output.bin/60, t.cycle, by = output.bin/60)
-  t <- as.matrix(rep(time, length(binned[,1])/s_per_day))
+  t <- as.data.frame(rep(time, length(binned[,1])/s_per_day))
   colnames(t) <- "ZT"
   output <- cbind(t,binned)
 

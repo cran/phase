@@ -1,13 +1,13 @@
-4e2e23408cb973f97963bf136c2657b1 *DESCRIPTION
+71274f0f7c4bffcf4c2e693e0651a86c *DESCRIPTION
 8863553827c5238f83b7654f703ae519 *LICENSE
 7c86adc294effada4b9322bc69d61fad *NAMESPACE
 40323ae4870a41148a7ab63b25e0bf8d *R/CoM.R
-b23ea21fd48ef63ca2497e7c939c13de *R/allActograms.R
+832e2d7fdd9f428972a4cad86b63c1bc *R/allActograms.R
 08bb5875f068b54c253c306dbd52be99 *R/allPeriodogramsAct.R
 f3f68a5dc12407895434002e1e86f039 *R/allPeriodogramsSleep.R
 d3d8b6e2450cfb676f2664faaaea00f1 *R/allSomnograms.R
 784e47cf8cee31a23448c0f40f37efcc *R/anticipationAct.R
-b6b3c4d88bd8539213f596b25512c7fe *R/binData.R
+8de76e2dd28426ce8f072f8131b168e7 *R/binData.R
 59db3ca76e53bf8135c138f8b1f30801 *R/df.R
 ad926e4f5f8482039e45c19b3a9d0fbf *R/indActogram.R
 f5fc673446baba4f1684bcbd030331c0 *R/indPeriodogramAct.R
