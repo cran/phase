@@ -22,11 +22,9 @@
 #' @export indSomnogram
 #'
 #' @examples
-#' \dontrun{
 #' td <- trimData(data = df, start.date = "19 Dec 20", start.time = "21:00",
 #' n.days = 10, bin = 1, t.cycle = 24)
 #' somnogram <- indSomnogram(data = td, ind = 21)
-#' }
 
 
 indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1, key.somno = 1, color = rgb(0,0,0,1)) {
@@ -44,76 +42,68 @@ indSomnogram <- function(data, sleep.def = c(5), bin = 30, t.cycle = 24, ind = 1
     
     if (length(sleep.def) == 1) {
       
-      raw <- data[,-c(1:10)]
+      raw <- data[,10+ind]
       
-      for (i in 1:length(raw[1,])) {
-        x <- raw[,i]
-        y <- rle(x)
-        d_y <- as.data.frame(unclass(y))
-        d_y$end <- cumsum(d_y$lengths)
-        d_y$start <- d_y$end - d_y$lengths + 1
-        
-        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def)
-        
-        if(length(dd_y[,1]) == 0) {
-          x = 0
-        } else {
-          for (j in 1:length(dd_y[,1])) {
-            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
-          }
+      x <- raw
+      y <- rle(x)
+      d_y <- as.data.frame(unclass(y))
+      d_y$end <- cumsum(d_y$lengths)
+      d_y$start <- d_y$end - d_y$lengths + 1
+      
+      dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def)
+      
+      if(length(dd_y[,1]) == 0) {
+        x = 0
+      } else {
+        for (j in 1:length(dd_y[,1])) {
+          x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
         }
-        
-        x[x > -1] = 0
-        x[x == -1] = 1
-        raw[,i] <- x
       }
       
-      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
-      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
-      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      x[x > -1] = 0
+      x[x == -1] = 1
+      raw <- x
+      
+      binned_full_run.sleep <- (length(raw)/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 1)
+      index.sleep <- seq(1, length(raw), by = bin)
       
       for (i in 1:length(index.sleep)) {
-        for (j in 1:length(raw[1,])) {
-          x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-          sleep[i,j] <- sum(x)
-        }
+        x <- raw[index.sleep[i]:(index.sleep[i]+bin-1)]
+        sleep[i,1] <- sum(x)
       }
       
     } else if (length(sleep.def) == 2) {
       
-      raw <- data[,-c(1:10)]
+      raw <- data[,10+ind]
       
-      for (i in 1:length(raw[1,])) {
-        x <- raw[,i]
-        y <- rle(x)
-        d_y <- as.data.frame(unclass(y))
-        d_y$end <- cumsum(d_y$lengths)
-        d_y$start <- d_y$end - d_y$lengths + 1
-        
-        dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def[1] & lengths < sleep.def[2])
-        
-        if(length(dd_y[,1]) == 0) {
-          x = 0
-        } else {
-          for (j in 1:length(dd_y[,1])) {
-            x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
-          }
+      x <- raw
+      y <- rle(x)
+      d_y <- as.data.frame(unclass(y))
+      d_y$end <- cumsum(d_y$lengths)
+      d_y$start <- d_y$end - d_y$lengths + 1
+      
+      dd_y <- subset(d_y, d_y$values == 0 & d_y$lengths >= sleep.def[1] & lengths < sleep.def[2])
+      
+      if(length(dd_y[,1]) == 0) {
+        x = 0
+      } else {
+        for (j in 1:length(dd_y[,1])) {
+          x[dd_y[j,"start"]:dd_y[j,"end"]] = -1
         }
-        
-        x[x > -1] = 0
-        x[x == -1] = 1
-        raw[,i] <- x
       }
       
-      binned_full_run.sleep <- (length(raw[,1])/(60*t.cycle))*s_per_day
-      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 32)
-      index.sleep <- seq(1, length(raw[,1]), by = bin)
+      x[x > -1] = 0
+      x[x == -1] = 1
+      raw <- x
+      
+      binned_full_run.sleep <- (length(raw)/(60*t.cycle))*s_per_day
+      sleep <- matrix(NA, nrow = binned_full_run.sleep, ncol = 1)
+      index.sleep <- seq(1, length(raw), by = bin)
       
       for (i in 1:length(index.sleep)) {
-        for (j in 1:length(raw[1,])) {
-          x <- raw[index.sleep[i]:(index.sleep[i]+bin-1),j]
-          sleep[i,j] <- sum(x)
-        }
+        x <- raw[index.sleep[i]:(index.sleep[i]+bin-1)]
+        sleep[i,1] <- sum(x)
       }
     }
     

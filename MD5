@@ -1,4 +1,4 @@
-71274f0f7c4bffcf4c2e693e0651a86c *DESCRIPTION
+777ba8655364a5a61e5c7a714c544a37 *DESCRIPTION
 8863553827c5238f83b7654f703ae519 *LICENSE
 7c86adc294effada4b9322bc69d61fad *NAMESPACE
 40323ae4870a41148a7ab63b25e0bf8d *R/CoM.R
@@ -12,7 +12,7 @@ d3d8b6e2450cfb676f2664faaaea00f1 *R/allSomnograms.R
 ad926e4f5f8482039e45c19b3a9d0fbf *R/indActogram.R
 f5fc673446baba4f1684bcbd030331c0 *R/indPeriodogramAct.R
 d857b11d7893f6c451ec0bf171d7dc68 *R/indPeriodogramSleep.R
-1bd03c7b3d050d9a221f3520458e32d6 *R/indSomnogram.R
+5f41fdc9c578edcde14b68fa20567b09 *R/indSomnogram.R
 60536228dfcee2bab7498097524d358b *R/peakIdentifier.R
 a2400aa909756c212a2d1d06c6c7972d *R/profilesAct.R
 5979f333111c8baffc1586ebe8745296 *R/profilesSleep.R
@@ -34,7 +34,7 @@ a2b452b354dea57a732c360a231f0263 *man/anticipationAct.Rd
 4dbd5a349d251296b4c43363e3dd59e4 *man/indActogram.Rd
 c894b26dee6c9a655849a0417be07bbb *man/indPeriodogramAct.Rd
 ac834334748b4bfb7a705a9715d967de *man/indPeriodogramSleep.Rd
-4ed7a3933c0fafa6aafc09274f1eab0e *man/indSomnogram.Rd
+ee32b76d8f17061a08968df642ee8d63 *man/indSomnogram.Rd
 0d36769fe760b66e1ae2a713b3ea377e *man/peakIdentifier.Rd
 1cab7dffba06d4db7fb9ada5ea2fdb06 *man/profilesAct.Rd
 d8d3a5d0d69fa6e5ed20c1b631cc84dd *man/profilesSleep.Rd
