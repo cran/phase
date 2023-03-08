@@ -14,6 +14,11 @@
 #' @importFrom plotly plot_ly add_trace layout %>% subplot
 #' @importFrom grDevices rgb
 #' @importFrom stats aggregate fitted lm na.omit sd
+#' @import shiny
+#' @import shinythemes
+#' @import shinydashboard
+#' @import shinycssloaders
+#' @import shinyFiles
 #' 
 #' @return A \code{plotly} \code{htmlwidget} with the actogram of a user defined fly.
 #'
@@ -32,6 +37,11 @@ indActogram <- function(data, bin = 30, t.cycle = 24, ind = 1, key.acto = 1, col
 
   requireNamespace("plotly")
   requireNamespace("zoo")
+  requireNamespace("shiny")
+  requireNamespace("shinythemes")
+  requireNamespace("shinydashboard")
+  requireNamespace("shinycssloaders")
+  requireNamespace("shinyFiles")
   
   if (requireNamespace("plotly", quietly = T)) {
     # library(plotly)

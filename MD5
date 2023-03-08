@@ -1,6 +1,6 @@
-777ba8655364a5a61e5c7a714c544a37 *DESCRIPTION
+b2f1f3250687044c711a84c91ee8d515 *DESCRIPTION
 8863553827c5238f83b7654f703ae519 *LICENSE
-7c86adc294effada4b9322bc69d61fad *NAMESPACE
+21aaee00d1133830cc98ba54fa855258 *NAMESPACE
 40323ae4870a41148a7ab63b25e0bf8d *R/CoM.R
 832e2d7fdd9f428972a4cad86b63c1bc *R/allActograms.R
 08bb5875f068b54c253c306dbd52be99 *R/allPeriodogramsAct.R
@@ -9,7 +9,7 @@ d3d8b6e2450cfb676f2664faaaea00f1 *R/allSomnograms.R
 784e47cf8cee31a23448c0f40f37efcc *R/anticipationAct.R
 8de76e2dd28426ce8f072f8131b168e7 *R/binData.R
 59db3ca76e53bf8135c138f8b1f30801 *R/df.R
-ad926e4f5f8482039e45c19b3a9d0fbf *R/indActogram.R
+966d485583d0236d1434f800fd4daf52 *R/indActogram.R
 f5fc673446baba4f1684bcbd030331c0 *R/indPeriodogramAct.R
 d857b11d7893f6c451ec0bf171d7dc68 *R/indPeriodogramSleep.R
 5f41fdc9c578edcde14b68fa20567b09 *R/indSomnogram.R
@@ -20,7 +20,9 @@ a2400aa909756c212a2d1d06c6c7972d *R/profilesAct.R
 8cdd2a45dfdfcf6d372e8fadbb438623 *R/rosePlotsSleep.R
 9be976a950954db471dcd716ed802f6c *R/sleepData.R
 552900571a3220178499f3a96d74f9d0 *R/sleepOnsetBoutLength.R
+3ed2b2ab3aba1b944fcae948128522e3 *R/sleepStages.R
 dc898a8589e6ff70a14ea774663dfc78 *R/sleepStat.R
+e7118b989f7810d515f07f8bb6e32f8e *R/transitionProbs.R
 3266fc981b94e59508aef075fb570532 *R/trimData.R
 8c4f93a4fc662655c57b9f33da8afa03 *data/df.rda
 b4a627dd178a98ffcc3204e3a2a3348b *man/CoM.Rd
@@ -42,5 +44,7 @@ ea4e876e69274fae9df8ec1f6d456f82 *man/rosePlotsAct.Rd
 24906a1507ec16ad9a98d31251cc7482 *man/rosePlotsSleep.Rd
 4c692aa750d4ec76371342c313899bab *man/sleepData.Rd
 bd0a173abd1fb645a7ea9fd42ce5e702 *man/sleepOnsetBoutLength.Rd
+8d68965b3bf95659b13369d575f37c0c *man/sleepStages.Rd
 53c976f014aba08eba337c5448e451fc *man/sleepStat.Rd
+d60d92b32519543f9ecaff8afe2958a5 *man/transitionProbs.Rd
 3db95202d0b2a2baa8d3b159a3da9d2c *man/trimData.Rd

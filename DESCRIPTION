@@ -1,6 +1,6 @@
 Package: phase
 Title: Analyse Biological Time-Series Data
-Version: 1.2.7
+Version: 1.2.8
 Author: Lakshman Abhilash [aut, cre] (<https://orcid.org/0000-0002-9933-8989>)
 Maintainer: Lakshman Abhilash <labhilash@gc.cuny.edu>
 Authors@R: 
@@ -15,9 +15,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-11-14 12:11:51 UTC; abhilashlakshman
+Packaged: 2023-03-08 13:41:34 UTC; abhilashlakshman
 Imports: circular, lubridate, plotly, pracma, signal, zeitgebr, zoo,
-        behavr
+        behavr, wesanderson, shiny, shinythemes, shinydashboard,
+        shinycssloaders, shinyFiles
 Depends: R (>= 2.10)
 Repository: CRAN
-Date/Publication: 2022-11-15 22:00:02 UTC
+Date/Publication: 2023-03-08 14:30:02 UTC
